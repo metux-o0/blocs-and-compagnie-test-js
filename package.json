@@ -12,6 +12,10 @@
     "config": "^3.3.8",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-json-validator-middleware": "^3.0.1",
+    "geolocation-utils": "^1.2.5",
+    "install": "^0.13.0",
+    "npm": "^9.2.0",
     "pouchdb": "^8.0.0"
   },
   "devDependencies": {

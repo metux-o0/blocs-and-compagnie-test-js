@@ -5,11 +5,15 @@ const pouchdb = new PouchDB('geo-routes');
 
 const dataFetcherFromFile = () => JSON.parse(fs.readFileSync(`${__dirname}/data.json`, 'utf-8'));
 
-const dataFetcherFromPouchDb = async () => {
+const dataFetcherFromPouchDb = async ({ withoutLocations = true } = true) => {
     const docs = await pouchdb.allDocs({include_docs:true}, function(err, doc){
-        return doc.rows.map(route => {
-            delete route.doc.locations;
-        });
+
+        if (withoutLocations){
+            doc.rows.map(route => {
+                delete route.doc.locations;
+            });
+        }
+        return doc
     })
     return docs;
 }
