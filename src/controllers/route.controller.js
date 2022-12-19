@@ -4,10 +4,24 @@ const router = express.Router();
 
 const routeService = require('../services/route.service')
 
-function getRoutes(req, res, _next) {
-  res.send(routeService.getRoutesWithoutLocationPoints());
+function getRoutesFromFile(req, res, next) {
+  try{
+    res.json(routeService.getRoutesWithoutLocationPointsFromFile());
+  }catch (err){
+    next(err);
+  }
 }
 
-router.get('/', getRoutes);
+function getRoutesFromPouchDb(req, res, next) {
+  routeService.getRoutesWithoutLocationPointsFromPouchDb().then(routes => res.json(routes)).catch(err => next(err));
+}
+
+function getRouteById(req, res, next){
+  routeService.getRouteWithoutLocationPointsById(req.params.routeId).then(route => res.json(route)).catch(err => next(err));
+}
+
+router.get('/fromFile', getRoutesFromFile);
+router.get('/', getRoutesFromPouchDb);
+router.get('/:routeId', getRouteById)
 
 module.exports = router;

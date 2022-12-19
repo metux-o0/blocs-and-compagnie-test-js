@@ -1,14 +1,37 @@
 const fs = require('fs');
+const PouchDB = require('pouchdb');
 
-const dataFetcher = () => JSON.parse(fs.readFileSync(`${__dirname}/data.json`, 'utf-8'));
+const pouchdb = new PouchDB('geo-routes');
+
+const dataFetcherFromFile = () => JSON.parse(fs.readFileSync(`${__dirname}/data.json`, 'utf-8'));
+
+const dataFetcherFromPouchDb = async () => {
+    const docs = await pouchdb.allDocs({include_docs:true}, function(err, doc){
+        return doc.rows.map(route => {
+            delete route.doc.locations;
+        });
+    })
+    return docs;
+}
 
 const dataParserForPouchDb = () => {
-    const { routes } = dataFetcher();
+    const { routes } = dataFetcherFromFile();
 
-    routes.map((route,index) => {
-        route._id = index.toString();
+    routes.map((route) => {
+        route._id = route.id;
     })
     return routes;
 }
 
-module.exports = { dataFetcher, dataParserForPouchDb};
+const dataFetcherFromPouchDbById = async (documentId) => {
+    const data = await pouchdb.get(documentId).then(function (doc){
+        return doc;
+    }).catch(function(err) { 
+        console.log(err)
+    });
+
+    return data;
+}
+
+
+module.exports = { dataFetcherFromFile, dataFetcherFromPouchDb, dataParserForPouchDb, dataFetcherFromPouchDbById};
