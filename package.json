@@ -4,7 +4,9 @@
     "npm": "8.19.1"
   },
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "test": "NODE_ENV=test mocha 'tests/**/*.spec.js' --timeout 40000 --exit",
+    "test:watch": "NODE_ENV=test mocha 'tests/**/*.spec.js' --watch --timeout 40000 --exit"
   },
   "dependencies": {
     "config": "^3.3.8",
@@ -14,6 +16,7 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
